@@ -1,4 +1,4 @@
-package edu.westga.cs3110.unicoder.tests.utils;
+package edu.westga.cs3110.unicoder.helpersfortests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * @author John Chittam
  *
  */
-public class AssertionHelper {
+public class AssertionHelpers {
 	
 	/**
 	 * JUnit assertion for checking if two strings are equal, regardless of case
