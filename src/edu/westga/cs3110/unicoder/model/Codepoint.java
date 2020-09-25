@@ -6,6 +6,11 @@ public class Codepoint {
 	private static final int INTEGER_PARSE_RADIX = 16;
 
 	public Codepoint(String hexString) {
+		if (!hexString.matches("[0-9a-fA-F]{4,6}")) {
+			throw new IllegalArgumentException("The given hex string must be 4-6 characters and "
+					+ "only include 0-F (case insensitive)");
+		}
+		
 		this.hexString = hexString.toUpperCase();
 	}
 	
