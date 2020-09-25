@@ -2,16 +2,10 @@ package edu.westga.cs3110.unicoder.model;
 
 public class Codepoint {
 	
-	private String hexString;
-	private static final int INTEGER_PARSE_RADIX = 16;
+	private int codepoint;
 
 	public Codepoint(String hexString) {
-		if (!hexString.matches("[0-9a-fA-F]{4,6}")) {
-			throw new IllegalArgumentException("The given hex string must be 4-6 characters and "
-					+ "only include 0-F (case insensitive)");
-		}
-		
-		this.hexString = hexString.toUpperCase();
+		this.codepoint = Integer.parseUnsignedInt(hexString, 16);
 	}
 	
 	/**
@@ -20,17 +14,18 @@ public class Codepoint {
 	 * @return the encoded UTF-32 string
 	 */
 	public String toUTF32() {
-		int hexStringLength = this.hexString.length();
-		int neededLength = 8;
-		int numberOfZerosToAdd = neededLength - hexStringLength;
-		StringBuilder utf32String = new StringBuilder();
-		
-		for (int i = 0; i < numberOfZerosToAdd; i++) {
-			utf32String.append('0');
+		return String.format("%08X", this.codepoint);
+	}
+	
+	public String toUTF16() {
+		if (this.codepoint <= 0xd7ff || (this.codepoint >= 0xe000 && this.codepoint <= 0xffff)) {
+			return String.format("%04X", this.codepoint);
 		}
 		
-		utf32String.append(this.hexString);
+		int p = this.codepoint - 0x10000;
+		int highSurrogate = 0xD800 + (p >>> 10);
+		int lowSurrogate = 0xDC00 + (p & 0b00000000001111111111);
 		
-		return utf32String.toString();
+		return Integer.toHexString(highSurrogate) + Integer.toHexString(lowSurrogate);
 	}
 }
