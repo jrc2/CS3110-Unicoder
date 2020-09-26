@@ -36,9 +36,17 @@ public class Codepoint {
 	 */
 	public String toUTF16() {
 		if (this.codepoint <= 0xd7ff || (this.codepoint >= 0xe000 && this.codepoint <= 0xffff)) {
-			return String.format("%04X", this.codepoint);
+			return this.encodeTwoByteUTF16();
 		}
 		
+		return this.encodeFourByteUTF16();
+	}
+	
+	private String encodeTwoByteUTF16() {
+		return String.format("%04X", this.codepoint);
+	}
+	
+	private String encodeFourByteUTF16() {
 		int codepointMinus10000 = this.codepoint - 0x10000;
 		int highSurrogate = 0xD800 + (codepointMinus10000 >>> 10);
 		int lowSurrogate = 0xDC00 + (codepointMinus10000 & 0b00000000001111111111);
@@ -92,11 +100,7 @@ public class Codepoint {
 			   + Integer.toHexString(byte3) + Integer.toHexString(byte4);
 	}
 	
-	private int performBiwiseOrWith10000000(int sixBits) {
-		if (sixBits > 0b111111) {
-			throw new IllegalArgumentException("don't pass in more than 6 bits");
-		}
-		
+	private int performBiwiseOrWith10000000(int sixBits) {	
 		return sixBits | 0b10000000;
 	}
 
