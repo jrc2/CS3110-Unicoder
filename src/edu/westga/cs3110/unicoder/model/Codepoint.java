@@ -39,9 +39,9 @@ public class Codepoint {
 			return String.format("%04X", this.codepoint);
 		}
 		
-		int p = this.codepoint - 0x10000;
-		int highSurrogate = 0xD800 + (p >>> 10);
-		int lowSurrogate = 0xDC00 + (p & 0b00000000001111111111);
+		int codepointMinus10000 = this.codepoint - 0x10000;
+		int highSurrogate = 0xD800 + (codepointMinus10000 >>> 10);
+		int lowSurrogate = 0xDC00 + (codepointMinus10000 & 0b00000000001111111111);
 		
 		return Integer.toHexString(highSurrogate) + Integer.toHexString(lowSurrogate);
 	}
@@ -69,27 +69,35 @@ public class Codepoint {
 	
 	private String encodeTwoByteUTF8() {
 		int byte1 = 0b11000000 | (this.codepoint >>> 6);
-		int byte2 = (this.codepoint & 0b00000111111) | 0b10000000;
+		int byte2 = this.performBiwiseOrWith10000000(this.codepoint & 0b00000111111);
 		
 		return Integer.toHexString(byte1) + Integer.toHexString(byte2);
 	}
 	
 	private String encodeThreeByteUTF8() {
 		int byte1 = 0b11100000 | (this.codepoint >>> 12);
-		int byte2 = ((this.codepoint >>> 6) & 0b0000111111) | 0b10000000;
-		int byte3 = (this.codepoint & 0b000000000000111111) | 0b10000000;
+		int byte2 = this.performBiwiseOrWith10000000((this.codepoint >>> 6) & 0b0000111111);
+		int byte3 = this.performBiwiseOrWith10000000(this.codepoint & 0b000000000000111111);
 		
 		return Integer.toHexString(byte1) + Integer.toHexString(byte2) + Integer.toHexString(byte3);
 	}
 	
 	private String encodeFourByteUTF8() {
 		int byte1 = 0b11110000 | (this.codepoint >>> 18);
-		int byte2 = ((this.codepoint >>> 12) & 0b000111111) | 0b10000000;
-		int byte3 = ((this.codepoint >>> 6) & 0b000000000111111) | 0b10000000;
-		int byte4 = (this.codepoint & 0b000000000000000111111) | 0b10000000;
+		int byte2 = this.performBiwiseOrWith10000000((this.codepoint >>> 12) & 0b000111111);
+		int byte3 = this.performBiwiseOrWith10000000((this.codepoint >>> 6) & 0b000000000111111);
+		int byte4 = this.performBiwiseOrWith10000000(this.codepoint & 0b000000000000000111111);
 		
 		return Integer.toHexString(byte1) + Integer.toHexString(byte2)
 			   + Integer.toHexString(byte3) + Integer.toHexString(byte4);
+	}
+	
+	private int performBiwiseOrWith10000000(int sixBits) {
+		if (sixBits > 0b111111) {
+			throw new IllegalArgumentException("don't pass in more than 6 bits");
+		}
+		
+		return sixBits | 0b10000000;
 	}
 
 }
