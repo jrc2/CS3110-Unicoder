@@ -45,5 +45,51 @@ public class Codepoint {
 		
 		return Integer.toHexString(highSurrogate) + Integer.toHexString(lowSurrogate);
 	}
+	
+	/**
+	 * Encodes the codepoint as a UTF-8 string
+	 * 
+	 * @return the encoded UTF-8 string
+	 */
+	public String toUTF8() {
+		if (this.codepoint <= 0x7f) {
+			return this.encodeSingleByteUTF8();
+		} else if (this.codepoint >= 0x80 && this.codepoint <= 0x7ff) {
+			return this.encodeTwoByteUTF8();
+		} else if (this.codepoint >= 0x800 && this.codepoint <= 0xffff) {
+			return this.encodeThreeByteUTF8();
+		}
+		
+		return this.encodeFourByteUTF8();
+	}
+	
+	private String encodeSingleByteUTF8() {
+		return String.format("%02X", this.codepoint);
+	}
+	
+	private String encodeTwoByteUTF8() {
+		int byte1 = 0b11000000 | (this.codepoint >>> 6);
+		int byte2 = (this.codepoint & 0b00000111111) | 0b10000000;
+		
+		return Integer.toHexString(byte1) + Integer.toHexString(byte2);
+	}
+	
+	private String encodeThreeByteUTF8() {
+		int byte1 = 0b11100000 | (this.codepoint >>> 12);
+		int byte2 = ((this.codepoint >>> 6) & 0b0000111111) | 0b10000000;
+		int byte3 = (this.codepoint & 0b000000000000111111) | 0b10000000;
+		
+		return Integer.toHexString(byte1) + Integer.toHexString(byte2) + Integer.toHexString(byte3);
+	}
+	
+	private String encodeFourByteUTF8() {
+		int byte1 = 0b11110000 | (this.codepoint >>> 18);
+		int byte2 = ((this.codepoint >>> 12) & 0b000111111) | 0b10000000;
+		int byte3 = ((this.codepoint >>> 6) & 0b000000000111111) | 0b10000000;
+		int byte4 = (this.codepoint & 0b000000000000000111111) | 0b10000000;
+		
+		return Integer.toHexString(byte1) + Integer.toHexString(byte2)
+			   + Integer.toHexString(byte3) + Integer.toHexString(byte4);
+	}
 
 }
