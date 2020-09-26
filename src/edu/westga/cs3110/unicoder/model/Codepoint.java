@@ -1,9 +1,21 @@
 package edu.westga.cs3110.unicoder.model;
 
+/**
+ * Handles encoding hex strings as UTF-8, UTF-16, and UTF-32.
+ * 
+ * @author John Chittam
+ *
+ */
 public class Codepoint {
 	
 	private int codepoint;
 
+	/**
+	 * Converts the given hexString to an int representation and
+	 * stores it in this.codepoint
+	 * 
+	 * @param hexString the hex string to convert and store
+	 */
 	public Codepoint(String hexString) {
 		this.codepoint = Integer.parseUnsignedInt(hexString, 16);
 	}
@@ -17,6 +29,11 @@ public class Codepoint {
 		return String.format("%08X", this.codepoint);
 	}
 	
+	/**
+	 * Encodes the codepoint as a UTF-16 string
+	 * 
+	 * @return the encoded UTF-16 string
+	 */
 	public String toUTF16() {
 		if (this.codepoint <= 0xd7ff || (this.codepoint >= 0xe000 && this.codepoint <= 0xffff)) {
 			return String.format("%04X", this.codepoint);
@@ -28,4 +45,5 @@ public class Codepoint {
 		
 		return Integer.toHexString(highSurrogate) + Integer.toHexString(lowSurrogate);
 	}
+
 }
