@@ -9,38 +9,45 @@ import edu.westga.cs3110.unicoder.model.Codepoint;
 class TestToUTF16 {
 
 	@Test
-	void codepointLen4() {
-		Codepoint codepoint = new Codepoint("abcd");
-		
-		assertEqualsIgnoreCase("ABCD", codepoint.toUTF16());
-	}
-	
-	@Test
-	void codepointLen4OneLeading0() {
-		Codepoint codepoint = new Codepoint("0bcd");
-		
-		assertEqualsIgnoreCase("0BCD", codepoint.toUTF16());
-	}
-	
-	@Test
-	void codepointLen4TwoLeading0() {
-		Codepoint codepoint = new Codepoint("00cd");
-		
-		assertEqualsIgnoreCase("00CD", codepoint.toUTF16());
-	}
-	
-	@Test
-	void codepointLen4ThreeLeading0() {
-		Codepoint codepoint = new Codepoint("000d");
-		
-		assertEqualsIgnoreCase("000D", codepoint.toUTF16());
-	}
-	
-	@Test
-	void codepoint4Zeros() {
+	void codepointLen4Part1LowerBound() {
 		Codepoint codepoint = new Codepoint("0000");
 		
 		assertEqualsIgnoreCase("0000", codepoint.toUTF16());
+	}
+	
+	@Test
+	void codepointLen4Part1UpperBound() {
+		Codepoint codepoint = new Codepoint("d7ff");
+		
+		assertEqualsIgnoreCase("d7ff", codepoint.toUTF16());
+	}
+	
+	@Test
+	void codepointLen4Part1() {
+		Codepoint codepoint = new Codepoint("6f5c");
+		
+		assertEqualsIgnoreCase("6f5c", codepoint.toUTF16());
+	}
+	
+	@Test
+	void codepointLen4Part2LowerBound() {
+		Codepoint codepoint = new Codepoint("e000");
+		
+		assertEqualsIgnoreCase("e000", codepoint.toUTF16());
+	}
+	
+	@Test
+	void codepointLen4Part2UpperBound() {
+		Codepoint codepoint = new Codepoint("ffff");
+		
+		assertEqualsIgnoreCase("ffff", codepoint.toUTF16());
+	}
+	
+	@Test
+	void codepointLen4Part2() {
+		Codepoint codepoint = new Codepoint("e780");
+		
+		assertEqualsIgnoreCase("e780", codepoint.toUTF16());
 	}
 	
 	@Test
@@ -83,6 +90,13 @@ class TestToUTF16 {
 		Codepoint codepoint = new Codepoint("10980d");
 		
 		assertEqualsIgnoreCase("dbe6dc0d", codepoint.toUTF16());
+	}
+	
+	@Test
+	void lotsOfLeadingZeros() {
+		Codepoint codepoint = new Codepoint("00000000000000000000000000000001");
+		
+		assertEqualsIgnoreCase("0001", codepoint.toUTF16());
 	}
 
 }
