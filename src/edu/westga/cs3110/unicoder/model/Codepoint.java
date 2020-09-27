@@ -15,6 +15,8 @@ public class Codepoint {
 	 * Converts the given hexString to an int representation and
 	 * stores it in this.codepoint
 	 * 
+	 * @precondition hexString is a valid hex string
+	 * 
 	 * @param hexString the hex string to convert and store
 	 */
 	public Codepoint(String hexString) {
@@ -32,6 +34,9 @@ public class Codepoint {
 	
 	/**
 	 * Encodes the codepoint as a UTF-16 string
+	 * 
+	 * @precondition this.codepoint <= 0x10ffff AND 
+	 *               (this.codepoint <= 0xd7ff OR this.codepoint >= 0xe000)
 	 * 
 	 * @return the encoded UTF-16 string
 	 */
@@ -64,6 +69,9 @@ public class Codepoint {
 	
 	/**
 	 * Encodes the codepoint as a UTF-8 string
+	 * 
+	 * 
+	 * @precondition this.codepoint <= 0x10ffff
 	 * 
 	 * @return the encoded UTF-8 string
 	 */
