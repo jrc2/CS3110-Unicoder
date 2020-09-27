@@ -9,6 +9,7 @@ package edu.westga.cs3110.unicoder.model;
 public class Codepoint {
 	
 	private int codepoint;
+	private static final String CANNOT_ENCODE_GREATER_THAN_10FFFF = "cannot encode codepoint > 0x10ffff";
 
 	/**
 	 * Converts the given hexString to an int representation and
@@ -35,6 +36,13 @@ public class Codepoint {
 	 * @return the encoded UTF-16 string
 	 */
 	public String toUTF16() {
+		if (this.codepoint > 0xd7ff && this.codepoint < 0xe000) {
+			throw new IllegalArgumentException("codepoint cannot be > 0xd7ff and < e0000");
+		}
+		if (this.codepoint > 0x10ffff) {
+			throw new IllegalArgumentException(CANNOT_ENCODE_GREATER_THAN_10FFFF);
+		}
+		
 		if (this.codepoint <= 0xd7ff || (this.codepoint >= 0xe000 && this.codepoint <= 0xffff)) {
 			return this.encodeTwoByteUTF16();
 		}
@@ -60,6 +68,10 @@ public class Codepoint {
 	 * @return the encoded UTF-8 string
 	 */
 	public String toUTF8() {
+		if (this.codepoint > 0x10ffff) {
+			throw new IllegalArgumentException(CANNOT_ENCODE_GREATER_THAN_10FFFF);
+		}
+		
 		if (this.codepoint <= 0x7f) {
 			return this.encodeSingleByteUTF8();
 		} else if (this.codepoint >= 0x80 && this.codepoint <= 0x7ff) {

@@ -1,6 +1,7 @@
 package edu.westga.cs3110.unicoder.tests.model.codepoint;
 
-import static edu.westga.cs3110.unicoder.helpersfortests.AssertionHelpers.*;
+import static edu.westga.cs3110.unicoder.helpersfortests.AssertionHelpers.assertEqualsIgnoreCase;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
 
@@ -97,6 +98,51 @@ class TestToUTF16 {
 		Codepoint codepoint = new Codepoint("00000000000000000000000000000001");
 		
 		assertEqualsIgnoreCase("0001", codepoint.toUTF16());
+	}
+	
+	@Test
+	void codepointAtStartOfGap() {
+		Codepoint codepoint = new Codepoint("d800");
+		
+		assertThrows(IllegalArgumentException.class, () -> {
+			codepoint.toUTF16();
+		});
+	}
+	
+	@Test
+	void codepointAtEndOfGap() {
+		Codepoint codepoint = new Codepoint("dfff");
+		
+		assertThrows(IllegalArgumentException.class, () -> {
+			codepoint.toUTF16();
+		});
+	}
+	
+	@Test
+	void codepointInGap() {
+		Codepoint codepoint = new Codepoint("dd4e");
+		
+		assertThrows(IllegalArgumentException.class, () -> {
+			codepoint.toUTF16();
+		});
+	}
+	
+	@Test
+	void codepointOneTooBig() {
+		Codepoint codepoint = new Codepoint("110000");
+		
+		assertThrows(IllegalArgumentException.class, () -> {
+			codepoint.toUTF16();
+		});
+	}
+	
+	@Test
+	void codepointWayTooBig() {
+		Codepoint codepoint = new Codepoint("FFFFFF");
+		
+		assertThrows(IllegalArgumentException.class, () -> {
+			codepoint.toUTF16();
+		});
 	}
 
 }

@@ -1,6 +1,7 @@
 package edu.westga.cs3110.unicoder.tests.model.codepoint;
 
-import static edu.westga.cs3110.unicoder.helpersfortests.AssertionHelpers.*;
+import static edu.westga.cs3110.unicoder.helpersfortests.AssertionHelpers.assertEqualsIgnoreCase;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
 
@@ -97,6 +98,24 @@ class TestToUTF8 {
 		Codepoint codepoint = new Codepoint("10ea6a");
 		
 		assertEqualsIgnoreCase("f48ea9aa", codepoint.toUTF8());
+	}
+	
+	@Test
+	void codepointOneTooBig() {
+		Codepoint codepoint = new Codepoint("110000");
+		
+		assertThrows(IllegalArgumentException.class, () -> {
+			codepoint.toUTF8();
+		});
+	}
+	
+	@Test
+	void codepointWayTooBig() {
+		Codepoint codepoint = new Codepoint("FFFFFF");
+		
+		assertThrows(IllegalArgumentException.class, () -> {
+			codepoint.toUTF8();
+		});
 	}
 
 }

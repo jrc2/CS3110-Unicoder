@@ -1,6 +1,6 @@
 package edu.westga.cs3110.unicoder.tests.model.codepoint;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
 

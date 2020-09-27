@@ -1,6 +1,6 @@
 package edu.westga.cs3110.unicoder.tests.model.codepoint;
 
-import static edu.westga.cs3110.unicoder.helpersfortests.AssertionHelpers.*;
+import static edu.westga.cs3110.unicoder.helpersfortests.AssertionHelpers.assertEqualsIgnoreCase;
 
 import org.junit.jupiter.api.Test;
 
